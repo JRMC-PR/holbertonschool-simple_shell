@@ -12,24 +12,25 @@ int main(int ac, char **av, char** env)
 	char *input = NULL;
 	size_t size = 0;
 	ssize_t read;
-	
+
 	/*the do will prompt "$" untill exit*/
 	do
 	{
 		/*ignore unused attributes*/
 		(void)ac;
 		(void)av;
-	/*prompt the shell*/
+		/*prompt the shell*/
 		printf("$ ");
 		/*read the user imput next verify if failed*/
 		read = getline(&input, &size, stdin);
 		if (read == -1)
-			break; /*exit loop*/
+			break; /*exit loop*/	
 		if (input[0] == '\n') /*check if there is something from the user*/
 			continue; /*continue to next itertion*/
-		/*check for exit ir spaces entred*/
-		if (strcmp(input, "exit") == 0)
-			break; /*exit loop*/
+		printf("Input: %s \n", input);
+		if(strcmp(input, "exit") == 0)
+			exit(0); /*exit loop*/
+		/*check for exit or spaces entred*/
 		if (isspace((unsigned char)input[0]))
 			continue; /*continue to next iteraration*/
 		/*execute commant entered*/
