@@ -8,7 +8,7 @@ Releade date December 9, 2022.
 
 ## Table of Contents
 1. Introduction
-2. Prokect Information
+2. Project Information
     - Task
     - General Requirements
     - Allowed functions & system calls
