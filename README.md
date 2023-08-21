@@ -4,7 +4,7 @@
 
 =======
 # Simple Shell
-Releade date December 9, 2022.
+Releade date August 25, 2023
 
 ## Table of Contents
 1. Introduction
