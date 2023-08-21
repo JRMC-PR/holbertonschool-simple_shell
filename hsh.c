@@ -27,7 +27,6 @@ int main(int ac, char **av, char** env)
 			break; /*exit loop*/	
 		if (input[0] == '\n') /*check if there is something from the user*/
 			continue; /*continue to next itertion*/
-		printf("Input: %s \n", input);
 		if(strcmp(input, "exit") == 0)
 			exit(0); /*exit loop*/
 		/*check for exit or spaces entred*/
