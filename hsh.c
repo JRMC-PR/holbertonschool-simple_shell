@@ -3,10 +3,10 @@
  *main -execute main shell function
  *@ac: argument count
  *@av: array of pointers
- *env: enviroments variables
+ *@env: enviroments variables
  *Return: 0 on success
  */
-int main(int ac, char **av, char** env)
+int main(int ac, char **av, char **env)
 {
 	/*Declarations*/
 	char *input = NULL;
@@ -14,8 +14,7 @@ int main(int ac, char **av, char** env)
 	ssize_t read;
 
 	/*the do will prompt "$" untill exit*/
-	do
-	{
+	do {
 		/*ignore unused attributes*/
 		(void)ac;
 		(void)av;
@@ -24,10 +23,10 @@ int main(int ac, char **av, char** env)
 		/*read the user imput next verify if failed*/
 		read = getline(&input, &size, stdin);
 		if (read == -1)
-			break; /*exit loop*/	
+			break; /*exit loop*/
 		if (input[0] == '\n') /*check if there is something from the user*/
 			continue; /*continue to next itertion*/
-		if(strcmp(input, "exit") == 0)
+		if (strncmp(input, "exit", 4) == 0)
 			exit(0); /*exit loop*/
 		/*check for exit or spaces entred*/
 		if (isspace((unsigned char)input[0]))
