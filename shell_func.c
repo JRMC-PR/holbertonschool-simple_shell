@@ -33,7 +33,7 @@ void non_inter(char *com, char **env)
 	/*check if forck sucess*/
 	if (child == 0)
 	{
-		execve(Tokens[0], Tokens + 1, env); /* Execute the com */
+		execve(Tokens[0], Tokens , env); /* Execute the com */
 		perror("error: "); /* if execve fails */
 		exit(EXIT_FAILURE); /* Exit child with failure status */
 	}
@@ -55,7 +55,7 @@ void exec_com(char *com, char **env)
 	char **Tokens = NULL;
 	int T_count = 0;
 	/*tokenize com*/
-	token = strtok(com, " \n");
+	token = strtok(com, " ");
 	if (token == NULL)
 		return;
 	while (token != NULL)
