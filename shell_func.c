@@ -1,5 +1,48 @@
 #include "simple_shell.h"
 /**
+ *non_inter - executes command from arv
+ *@av: argument pointer array
+ *@env: points the the enviroment variable
+ */
+void non_inter(char *com, char **env)
+{
+	/*declarations*/
+	pid_t child;
+	char *token = NULL;
+	char **Tokens = NULL;
+	int T_count = 0;
+	/*make up for options*/
+	token = strtok(com, " ");
+	if (token == NULL)
+		return;
+	while (token != NULL)
+	{
+		/*allocate mem for tokens in aray and chekc if fai*/
+		Tokens = realloc(Tokens, sizeof(char *) * (T_count + 1));
+		if (Tokens == NULL)
+		{
+			perror("realloc fail");
+			return;
+		} /*end if*/
+		Tokens[T_count] = token;
+		T_count++;
+		token = strtok(NULL, "\n");
+		Tokens[T_count] = NULL;
+	} /*end while*/
+	child = fork(); /*child birth*/
+	/*check if forck sucess*/
+	if (child == 0)
+	{
+		execve(Tokens[0], Tokens + 1, env); /* Execute the com */
+		perror("error: "); /* if execve fails */
+		exit(EXIT_FAILURE); /* Exit child with failure status */
+	}
+	else
+	{
+		wait(NULL);	  /* Parent process waits for the child process to complete */
+	}
+} /*end function*/
+/**
  *exec_com - incarge of analizing and executing the comnand
  *@com: holds the command to be executed
  *@env: enviroment variables of the system
