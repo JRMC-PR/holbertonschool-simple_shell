@@ -1,7 +1,7 @@
 #include "simple_shell.h"
 /**
  *non_inter - executes command from arv
- *@av: argument pointer array
+ *@com: argument pointer array
  *@env: points the the enviroment variable
  */
 void non_inter(char *com, char **env)
@@ -33,7 +33,7 @@ void non_inter(char *com, char **env)
 	/*check if forck sucess*/
 	if (child == 0)
 	{
-		execve(Tokens[0], Tokens , env); /* Execute the com */
+		execve(Tokens[0], Tokens, env); /* Execute the com */
 		perror("error: "); /* if execve fails */
 		exit(EXIT_FAILURE); /* Exit child with failure status */
 	}
