@@ -8,27 +8,9 @@ void non_inter(char *com, char **env)
 {
 	/*declarations*/
 	pid_t child;
-	char *token = NULL;
 	char **Tokens = NULL;
-	int T_count = 0;
-	/*make up for options*/
-	token = strtok(com, " ");
-	if (token == NULL)
-		return;
-	while (token != NULL)
-	{
-		/*allocate mem for tokens in aray and chekc if fai*/
-		Tokens = realloc(Tokens, sizeof(char *) * (T_count + 1));
-		if (Tokens == NULL)
-		{
-			perror("realloc fail");
-			return;
-		} /*end if*/
-		Tokens[T_count] = token;
-		T_count++;
-		token = strtok(NULL, "\n");
-		Tokens[T_count] = NULL;
-	} /*end while*/
+	/*Recive tokens*/
+	Tokens = Tok(com, " ");
 	child = fork(); /*child birth*/
 	/*check if forck sucess*/
 	if (child == 0)
@@ -51,27 +33,9 @@ void exec_com(char *com, char **env)
 {
 	/*declarations*/
 	pid_t child;
-	char *token = NULL;
 	char **Tokens = NULL;
-	int T_count = 0;
-	/*tokenize com*/
-	token = strtok(com, " ");
-	if (token == NULL)
-		return;
-	while (token != NULL)
-	{
-		/*allocate mem for tokens in aray and chekc if fai*/
-		Tokens = realloc(Tokens, sizeof(char *) * (T_count + 1));
-		if (Tokens == NULL)
-		{
-			perror("realloc fail");
-			return;
-		} /*end if*/
-		Tokens[T_count] = token;
-		T_count++;
-		token = strtok(NULL, " \n");
-		Tokens[T_count] = NULL;
-	} /*end while*/
+	/*recive tokens*/
+	Tokens = Tok(com, "\n");
 	child = fork(); /*child process birth */
 	if (child == -1)
 	{
@@ -93,40 +57,62 @@ void exec_com(char *com, char **env)
 
 /**
  * get_paths - Extracts paths from the PATH environment variable
+ * @env: points to the env variable
  * Return: A pointer to an array of strings containing the paths
  *         NULL on failure or if PATH is not found
  */
-char **get_paths(void)
+char *get_path(char **env)
 {
 	/* Get the value of the PATH environment variable */
 	char *path_env = NULL;
-	char *token = NULL;
-	int num_paths = 0;
-	char **paths = NULL;
-
-	path_env = getenv("PATH");
-	/* Check if PATH environment variable exists */
-	if (path_env == NULL)
+	int i = 0;
+	/*search for the PATH*/
+	for ( ; env[i] != NULL; i++)
 	{
+		if (strncmp(env[i], "PATH=", 5) == 0)
+		{
+			path_env = env[i] + 5;
+			break;
+		} /*end if*/
+	} /*end for*/
+	/*verify is we have the PATH*/
+	if (path_env != NULL)
+		return (path_env);
+	else
 		perror("error: ");
+	return (NULL);
+} /*end fucntion*/
+
+/**
+ ***Tok - tokenize something
+ *@com: points to the command recived
+ *delm: points to the delimiter
+ *Return: The Tokens pointer
+ */
+char **Tok( char *com, const char *delm)
+{
+	char *token = NULL;
+	char **Tokens = NULL;
+	int T_count = 0;
+	/*tokenize com*/
+	token = strtok(com, delm);
+	if (token == NULL)
+		return(NULL);
+	/*allocate mem for tokens in aray and chekc if fai*/
+	Tokens = realloc(Tokens, sizeof(char *) * (T_count + 1));
+	if (Tokens == NULL)
+	{
+		perror("realloc fail");
 		return (NULL);
-	}
-	token = strtok(path_env, ":");
+	} /*end if*/
 	while (token != NULL)
 	{
-		/* Allocate memory for the new path in the array */
-		paths = realloc(paths, sizeof(char *) * (num_paths + 1));
-		if (paths == NULL)
-		{
-			perror("error: ");
-			return (NULL);
-		}
-		paths[num_paths] = token; /* Store the current path in the array */
-		num_paths++;			  /* You increment the num_paths counter.*/
-		token = strtok(NULL, ":"); /* Move to the next token */
-	}
-	/* Add a NULL pointer at the end to terminate the array */
-	paths = realloc(paths, sizeof(char *) * (num_paths + 1));
-	paths[num_paths] = NULL;
-	return (paths);
-} /*end fucntion*/
+		Tokens[T_count] = token;
+		T_count++;
+		token = strtok(NULL, "\n");
+		} /*end while*/
+	Tokens[T_count] = NULL;
+	return (Tokens);
+} /*end function*/
+
+
