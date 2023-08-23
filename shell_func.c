@@ -1,5 +1,48 @@
 #include "simple_shell.h"
 /**
+ *non_inter - executes command from arv
+ *@com: argument pointer array
+ *@env: points the the enviroment variable
+ */
+void non_inter(char *com, char **env)
+{
+	/*declarations*/
+	pid_t child;
+	char *token = NULL;
+	char **Tokens = NULL;
+	int T_count = 0;
+	/*make up for options*/
+	token = strtok(com, " ");
+	if (token == NULL)
+		return;
+	while (token != NULL)
+	{
+		/*allocate mem for tokens in aray and chekc if fai*/
+		Tokens = realloc(Tokens, sizeof(char *) * (T_count + 1));
+		if (Tokens == NULL)
+		{
+			perror("realloc fail");
+			return;
+		} /*end if*/
+		Tokens[T_count] = token;
+		T_count++;
+		token = strtok(NULL, "\n");
+		Tokens[T_count] = NULL;
+	} /*end while*/
+	child = fork(); /*child birth*/
+	/*check if forck sucess*/
+	if (child == 0)
+	{
+		execve(Tokens[0], Tokens, env); /* Execute the com */
+		perror("error: "); /* if execve fails */
+		exit(EXIT_FAILURE); /* Exit child with failure status */
+	}
+	else
+	{
+		wait(NULL);	  /* Parent process waits for the child process to complete */
+	}
+} /*end function*/
+/**
  *exec_com - incarge of analizing and executing the comnand
  *@com: holds the command to be executed
  *@env: enviroment variables of the system
@@ -9,25 +52,25 @@ void exec_com(char *com, char **env)
 	/*declarations*/
 	pid_t child;
 	char *token = NULL;
-	char **tokens = NULL;
+	char **Tokens = NULL;
 	int T_count = 0;
 	/*tokenize com*/
-	token = strtok(com, " \n");
+	token = strtok(com, " ");
 	if (token == NULL)
 		return;
 	while (token != NULL)
 	{
 		/*allocate mem for tokens in aray and chekc if fai*/
-		tokens = realloc(tokens, sizeof(char *) *(T_count + 1));
-		if (tokens == NULL)
+		Tokens = realloc(Tokens, sizeof(char *) * (T_count + 1));
+		if (Tokens == NULL)
 		{
-			perror("realloc");
+			perror("realloc fail");
 			return;
 		} /*end if*/
-		tokens[T_count] = token;
+		Tokens[T_count] = token;
 		T_count++;
 		token = strtok(NULL, " \n");
-		tokens[T_count] = NULL;
+		Tokens[T_count] = NULL;
 	} /*end while*/
 	child = fork(); /*child process birth */
 	if (child == -1)
@@ -37,14 +80,14 @@ void exec_com(char *com, char **env)
 	}
 	if (child == 0)
 	{
-		execve(tokens[0], tokens, env); /* Execute the com */
+		execve(Tokens[0], Tokens, env); /* Execute the com */
 		perror("error: "); /* if execve fails */
 		exit(EXIT_FAILURE); /* Exit child with failure status */
 	}
 	else
 	{
 		wait(NULL);	  /* Parent process waits for the child process to complete */
-		free(tokens); /* Free allocated memory */
+		free(Tokens); /* Free allocated memory */
 	}
 } /*end exec*/
 
@@ -86,4 +129,4 @@ char **get_paths(void)
 	paths = realloc(paths, sizeof(char *) * (num_paths + 1));
 	paths[num_paths] = NULL;
 	return (paths);
-}
+} /*end fucntion*/

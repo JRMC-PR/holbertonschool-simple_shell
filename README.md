@@ -1,11 +1,10 @@
 # Simple Shell
-
 Releade date August 25, 2023
 
 ## Table of Contents
 1. Introduction
 2. Project Information
-    - Tasks
+    - Task
     - General Requirements
     - Allowed functions & system calls
 3. Documentation
@@ -13,23 +12,10 @@ Releade date August 25, 2023
 4. Authors
   -Jesus R. Mendez Cruz
   -Kelvin A. Santana Collazo
+    
 ## 📜 Introduction
 - What is Shell?
-
-  Shell is an enviorment in which we can run our commands, programs and shell scripts.
-
-- What is the difference between a function & a system call?
-
-  The main difference between system call and function call is that a system call is a request for the kernel to access a resource while a function call is a request made by a program to perform a specific task. System call are used when a program needs to communicate with the kernel while function call are to call a specific function within the program.
-
-- How does the shell use the PATH to find the programs?
-
-  The PATH variable is basically a list of directories your computer looks through to fing a requested executable.
-
-- How to suspend the execution of a process until one of its children terminates?
-
-  We can suspend the execution of a process until one of its children terminates using the wait function. A call to wait() blocks the calling process until one of its child processes exits or a signal is received. After child process terminates, parent continues its execution after wait system call instruction.
-
+The name "shell" for a command-line interpreter and the concept of making the shell a user program outside of the operating system kernel were introduced in Unix's precursor Multics. Shell is an enviorment in which we can run our commands, programs and shell scripts. Is the operating system's command-line interface (CLI) and interpreter for the set of commands that are used to communicate with the system. A shell script is usually created for command sequences in which a user has a need to use repeatedly in order to save time.
 ## 📢 Project Information
 
 ### 🎯 Tasks
@@ -131,7 +117,4 @@ You don’t have to:
   A built-in is a command or function that is part of the shell itself. The command is "built-in" to the shell program - no external program is necessary to run the command, and a new process does not need to be created.
 
 ## 🖋️ Developers
-### Lizbeth Garcia & Yahdiel Saldaña
-Hi, Im Lizbeth Garcia on of the developer behind this project. To connect with me professionaly and explore more about my work, I invite you to visit my LinkedIn profile ([Lizbeth Garcia](https://www.linkedin.com/in/lizbeth-garcia-53657a22a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B0ioxuQ4BQy2Z%2Fclq%2BYgMvQ%3D%3D) ). There, you can find articles, and professional experiences. For more casual discussion and tech insight, feel free to follow me on Twitter ([@GarlebLizz](https://twitter.com/GarlebLizz)) or Instagram ([@CodewithLizz](https://www.instagram.com/codewithlizz/)). I look foward to connecting with you!
-
-Hey, Im Yahdiel Saldaña one of the developer behind this project. You can find me on Github ([Yahdiel Saldaña](https://github.com/yahdielo)
+### Jesus R. Mendez, Kelvin A. Santana
