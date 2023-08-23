@@ -8,7 +8,6 @@
  */
 int main(int ac, char **av, char **env)
 {
-	/*Declarations*/
 	int isa = isatty(STDIN_FILENO) == 0;
 	char *input = NULL, *com = NULL;
 	size_t size = 0;
@@ -26,7 +25,6 @@ int main(int ac, char **av, char **env)
 	}
 	else
 	{/*end non_inter verification */
-		/*the do will prompt "$" untill exit*/
 		do {
 			/*ignore unused attributes*/
 			(void)av;
@@ -39,7 +37,10 @@ int main(int ac, char **av, char **env)
 			if (input[0] == '\n') /*check if there is something from the user*/
 				continue; /*continue to next itertion*/
 			if (strncmp(input, "exit", 4) == 0)
+			{
+				free(input);
 				exit(0); /*exit loop*/
+			}
 			if (isspace((unsigned char)input[0]))
 				continue; /*continue to next iteraration*/
 			exec_com(input, env);
@@ -48,3 +49,5 @@ int main(int ac, char **av, char **env)
 	free(input);
 	return (0);
 } /*end main*/
+
+
