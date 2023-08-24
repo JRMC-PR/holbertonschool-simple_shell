@@ -16,6 +16,7 @@ void non_inter(char *com, char **env)
 	if (child == 0)
 	{
 		execve(Tokens[0], Tokens, env); /* Execute the com */
+		free(Tokens);
 		perror("error: "); /* if execve fails */
 		exit(EXIT_FAILURE); /* Exit child with failure status */
 	}
@@ -60,6 +61,7 @@ void exec_com(char *com, char **env)
 	if (child == 0)
 	{
 		execve(Tokens[0], Tokens, env); /* Execute the com */
+		free(Tokens);
 		perror("error: "); /* if execve fails */
 		exit(EXIT_FAILURE); /* Exit child with failure status */
 	}
@@ -117,12 +119,12 @@ char **Tok( char *com, const char *delm)
 	token = strtok(com, delm);
 	if (token == NULL)
 		return(NULL);
-	/*allocate mem for tokens in aray and chekc if fai*/
-	Tokens = realloc(Tokens, sizeof(char *) * (T_count + 1));
+	Tokens = malloc(sizeof(char *) * 64);
 	if (Tokens == NULL){
 		perror("realloc fail");
 		return (NULL);
 	} /*end if*/
+	/*allocate mem for tokens in aray and chekc if fai*/
 	while (token != NULL){ /*popullate Tokens*/
 		Tokens[T_count] = token;
 		T_count++;

@@ -24,6 +24,7 @@ int main(int ac, char **av, char **env)
 		com = strtok(input, "\n");
 		non_inter(com, env);
 		free(input);
+		free(com);
 		return (0);
 	}
 	else
