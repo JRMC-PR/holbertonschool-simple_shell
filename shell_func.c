@@ -16,6 +16,7 @@ void non_inter(char *com, char **env)
 	if (child == 0)
 	{
 		execve(Tokens[0], Tokens, env); /* Execute the com */
+		free(Tokens);
 		perror("error: "); /* if execve fails */
 		exit(EXIT_FAILURE); /* Exit child with failure status */
 	}
