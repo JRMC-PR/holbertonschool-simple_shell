@@ -34,8 +34,23 @@ void exec_com(char *com, char **env)
 	/*declarations*/
 	pid_t child;
 	char **Tokens = NULL;
+	char **Path = NULL;
+	int i = 0;
+	struct stat st;
 	/*recive tokens*/
 	Tokens = Tok(com, "\n");
+	Path = get_path(env);
+	while (Path[i] != NULL)
+	{
+		strcat(Path[i],"/");
+		strcat(Path[i], Tokens[0]);
+		if (stat(Path[i], &st) == 0)
+		{
+			Tokens[0] = Path[i];
+			break;
+		}
+		i++;
+	}
 	child = fork(); /*child process birth */
 	if (child == -1)
 	{
@@ -56,15 +71,16 @@ void exec_com(char *com, char **env)
 } /*end exec*/
 
 /**
- * get_paths - Extracts paths from the PATH environment variable
+ * get_path - Extracts paths from the PATH environment variable
  * @env: points to the env variable
  * Return: A pointer to an array of strings containing the paths
  *         NULL on failure or if PATH is not found
  */
-char *get_path(char **env)
+char **get_path(char **env)
 {
 	/* Get the value of the PATH environment variable */
 	char *path_env = NULL;
+	char **Tokens = NULL;
 	int i = 0;
 	/*search for the PATH*/
 	for ( ; env[i] != NULL; i++)
@@ -77,7 +93,10 @@ char *get_path(char **env)
 	} /*end for*/
 	/*verify is we have the PATH*/
 	if (path_env != NULL)
-		return (path_env);
+	{
+		Tokens = Tok(path_env, ":");
+		return (Tokens);
+	}
 	else
 		perror("error: ");
 	return (NULL);
@@ -100,17 +119,15 @@ char **Tok( char *com, const char *delm)
 		return(NULL);
 	/*allocate mem for tokens in aray and chekc if fai*/
 	Tokens = realloc(Tokens, sizeof(char *) * (T_count + 1));
-	if (Tokens == NULL)
-	{
+	if (Tokens == NULL){
 		perror("realloc fail");
 		return (NULL);
 	} /*end if*/
-	while (token != NULL)
-	{
+	while (token != NULL){ /*popullate Tokens*/
 		Tokens[T_count] = token;
 		T_count++;
-		token = strtok(NULL, "\n");
-		} /*end while*/
+		token = strtok(NULL, ":");
+	} /*end while*/
 	Tokens[T_count] = NULL;
 	return (Tokens);
 } /*end function*/

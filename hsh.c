@@ -19,8 +19,11 @@ int main(int ac, char **av, char **env)
 	{
 		/*read the user imput next verify if failed*/
 		read = getline(&input, &size, stdin);
+		if (read == -1)
+			return (0);
 		com = strtok(input, "\n");
 		non_inter(com, env);
+		free(input);
 		return (0);
 	}
 	else
@@ -39,7 +42,7 @@ int main(int ac, char **av, char **env)
 			if (strncmp(input, "exit", 4) == 0)
 			{
 				free(input);
-				exit(0); /*exit loop*/
+				return (0); /*exit loop*/
 			}
 			if (isspace((unsigned char)input[0]))
 				continue; /*continue to next iteraration*/
