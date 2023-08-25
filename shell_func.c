@@ -1,108 +1,40 @@
 #include "simple_shell.h"
 /**
- *non_inter - executes command from arv
- *@com: argument pointer array
- *@env: points the the enviroment variable
- */
-void non_inter(char *com, char **env)
-{
-	/*declarations*/
-	pid_t child;
-	char **Tokens = NULL;
-	/*Recive tokens*/
-	Tokens = Tok(com, " ");
-	child = fork(); /*child birth*/
-	/*check if forck sucess*/
-	if (child == 0)
-	{
-		execve(Tokens[0], Tokens, env); /* Execute the com */
-		free(Tokens);
-		perror("error: "); /* if execve fails */
-		exit(EXIT_FAILURE); /* Exit child with failure status */
-	}
-	else
-	{
-		wait(NULL);	  /* Parent process waits for the child process to complete */
-	}
-} /*end function*/
-/**
  *exec_com - incarge of analizing and executing the comnand
  *@com: holds the command to be executed
  *@env: enviroment variables of the system
  */
-void exec_com(char *com, char **env)
-{
-	/*declarations*/
+void exec_com(char **com, char **env){
 	pid_t child;
-	char **Tokens = NULL;
-	char **Path = NULL;
-	int i = 0;
+	char *Path = "/bin/";
+	char *comP = malloc(512);
+	int status;
 	struct stat st;
 	/*recive tokens*/
-	Tokens = Tok(com, "\n");
-	Path = get_path(env);
-	while (Path[i] != NULL)
-	{
-		strcat(Path[i],"/");
-		strcat(Path[i], Tokens[0]);
-		if (stat(Path[i], &st) == 0)
-		{
-			Tokens[0] = Path[i];
-			break;
+
+		strcat(Path, com[0]);
+		if (stat(Path, &st) == 0) {
+			com[0] =strdup(Path);
+			free(comP);
 		}
-		i++;
-	}
 	child = fork(); /*child process birth */
-	if (child == -1)
-	{
+	if (child == -1){
 		perror("fork");
 		return;
 	}
-	if (child == 0)
-	{
-		execve(Tokens[0], Tokens, env); /* Execute the com */
-		free(Tokens);
+	if (child == 0){
+		execve(com[0], com, env); /* Execute the com */
+		free(com[0]);
+		free(com);
 		perror("error: "); /* if execve fails */
 		exit(EXIT_FAILURE); /* Exit child with failure status */
 	}
-	else
-	{
-		wait(NULL);	  /* Parent process waits for the child process to complete */
-		free(Tokens); /* Free allocated memory */
+	else{
+		waitpid(child, &status, 0); /* Parent process waits for the child process to complete */
+		free(com[0]);
 	}
 } /*end exec*/
 
-/**
- * get_path - Extracts paths from the PATH environment variable
- * @env: points to the env variable
- * Return: A pointer to an array of strings containing the paths
- *         NULL on failure or if PATH is not found
- */
-char **get_path(char **env)
-{
-	/* Get the value of the PATH environment variable */
-	char *path_env = NULL;
-	char **Tokens = NULL;
-	int i = 0;
-	/*search for the PATH*/
-	for ( ; env[i] != NULL; i++)
-	{
-		if (strncmp(env[i], "PATH=", 5) == 0)
-		{
-			path_env = env[i] + 5;
-			break;
-		} /*end if*/
-	} /*end for*/
-	/*verify is we have the PATH*/
-	if (path_env != NULL)
-	{
-		Tokens = Tok(path_env, ":");
-		return (Tokens);
-	}
-	else
-		perror("error: ");
-	return (NULL);
-} /*end fucntion*/
 
 /**
  ***Tok - tokenize something
@@ -110,29 +42,34 @@ char **get_path(char **env)
  *delm: points to the delimiter
  *Return: The Tokens pointer
  */
-char **Tok( char *com, const char *delm)
+char **Tok(char **tokI, char *com)
 {
+	/*Declarations*/
 	char *token = NULL;
-	char **Tokens = NULL;
 	int T_count = 0;
-	/*tokenize com*/
-	token = strtok(com, delm);
-	if (token == NULL)
-		return(NULL);
-	Tokens = malloc(sizeof(char *) * 64);
-	if (Tokens == NULL){
-		perror("realloc fail");
-		return (NULL);
-	} /*end if*/
-	/*allocate mem for tokens in aray and chekc if fai*/
-	while (token != NULL){ /*popullate Tokens*/
-		Tokens[T_count] = token;
+	/*verify allocation*/
+	if (tokI == NULL)
+	{
+		perror("malloc fail");
+		exit(EXIT_FAILURE);
+	} /*verify malloc*/
+	/*
+	 * " ": Space character
+	 *"\t": Tab character
+	 *"\r": Carriage return character
+	 *"\n": Newline character
+	 *"\a": Bell character (audible alert)
+	 *":" : Chech for colons
+	 */
+	token = strtok(com, "\t\r\n\a:");
+	while (token != NULL)
+	{
+		tokI[T_count] = token;
 		T_count++;
-		token = strtok(NULL, ":");
-	} /*end while*/
-	Tokens[T_count] = NULL;
-	return (Tokens);
-	free(Tokens);
+		token = strtok(NULL, "\t\r\n\a:");
+	}
+	tokI[T_count] = NULL;
+	return (tokI);
 } /*end function*/
 
 

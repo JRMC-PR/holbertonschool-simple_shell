@@ -8,10 +8,11 @@ Simple Shell - command language interpreter.
  ./hsh.
 
 .SH DECRIPTION
-Simple shell is one version of a command language interpreter that executes commands read from the standard input. It's functionality is limites to certain shell builtin functions found in the enviormental variables.
+The Simple Shell is a basic command language interpreter that processes commands read from standard input.
+It provides limited shell functionality, including executing commands with arguments, handling environmental
+variables, and exiting the shell. The Simple Shell does not yet support advanced features like piping, redirections,
+pattern matching, or variable expansions.
 
-.SS PATH
-It does not yet handle piping, redirections, pattern matching, variables expansions.
 
 .SS INVOCATION
 .IP Interactive
@@ -34,6 +35,36 @@ Lists files in the current directory according to the flags given by user
 
 .SH BUGS
 No known bugs.
+
+.SH EXAMPLES 1. Interactive, 2. Non-interactive
+The following examples demonstrate the usage of the function.
+.br
+.B 1) gcc -g -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell.h *.c -o hsh
+.br
+.B $ /bin/ls
+.br
+.B AUTHORS  README.md  hsh  hsh.c man_shell  shell_func.c  simple_shell.h
+.br
+.B $
+.br
+.B $ /bin/pwd
+.br
+.B /home/vagrant/holbertonschool-simple_shell
+.br
+.B $ exit
+.br
+.B 2) gcc -g -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell.h *.c -o hsh
+.br
+.B echo "/bin/ls" | ./hsh
+.br
+.B AUTHORS  README.md  hsh  hsh.c man_shell  shell_func.c  simple_shell.h
+.br
+.B echo "/bin/pwd" | ./hsh
+.br
+.B /home/vagrant/holbertonschool-simple_shell
+
+
+
 
 .SH AUTHOR
 Jesus R. Mendez, Kelvin A. Santana
