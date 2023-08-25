@@ -1,75 +1,116 @@
 #include "simple_shell.h"
-/**
- *exec_com - incarge of analizing and executing the comnand
- *@com: holds the command to be executed
- *@env: enviroment variables of the system
- */
-void exec_com(char **com, char **env){
-	pid_t child;
-	char *Path = "/bin/";
-	char *comP = malloc(512);
-	int status;
-	struct stat st;
-	/*recive tokens*/
 
-		strcat(Path, com[0]);
-		if (stat(Path, &st) == 0) {
-			com[0] =strdup(Path);
-			free(comP);
+/**
+ * get_path - Get the full path of a command
+ * @com_name: The name of the command
+ * Return: A dynamically allocated string containing the full path
+ *         NULL if the command is not found
+ */
+char *get_path(char *com_name)
+{
+	char *com_path = "/bin/";
+	char *conpath;
+
+	if (access(com_name, X_OK) == 0)
+	{
+		conpath = strdup(com_name);
+		if (conpath == NULL)
+		{
+			perror("malloc");
+			return (NULL);
 		}
-	child = fork(); /*child process birth */
-	if (child == -1){
-		perror("fork");
+		return (conpath);
+	}
+	conpath = malloc(strlen(com_path) + strlen(com_name) + 1);
+	if (conpath == NULL)
+	{
+		perror("malloc");
+		return (NULL);
+	}
+	sprintf(conpath, "%s%s", com_path, com_name);
+	if (access(conpath, X_OK) != 0)
+	{
+		perror("Command not found");
+		free(conpath);
+		return (NULL);
+	}
+	return (conpath);
+}
+
+
+/**
+ * Tok - Tokenize a command string and execute it
+ * @tokI: The command string to tokenize
+ * @env: The environment variables
+ */
+void Tok(char *tokI, char **env)
+{
+	char *tok = NULL;
+	char **tokens = NULL;
+	int counter = 0;
+	char *all_path;
+
+	tok = strtok(tokI, " \n"); /* Tokenize the command string */
+	if (tok == NULL)
+		return;
+
+	while (tok != NULL)
+	{
+		tokens = realloc(tokens, sizeof(char *) * (counter + 1));
+		if (tokens == NULL)
+		{
+			perror("realloc");
+			return;
+		}
+		tokens[counter] = strdup(tok); /* Store token in tokens array */
+		counter++;					   /* Increment the token count */
+		tok = strtok(NULL, " \n");	   /* Get next token from command string */
+	}
+	tokens = realloc(tokens, sizeof(char *) * (counter + 1));
+	if (tokens == NULL)
+	{
+		perror("realloc");
 		return;
 	}
-	if (child == 0){
-		execve(com[0], com, env); /* Execute the com */
-		free(com[0]);
-		free(com);
-		perror("error: "); /* if execve fails */
-		exit(EXIT_FAILURE); /* Exit child with failure status */
+	tokens[counter] = NULL; /* Set next element in the array to NULL */
+	all_path = get_path(tokens[0]); /* Get the full path of the command */
+	if (all_path == NULL)
+	{
+		free_token(tokens, counter);
+		return;
 	}
-	else{
-		waitpid(child, &status, 0); /* Parent process waits for the child process to complete */
-		free(com[0]);
-	}
-} /*end exec*/
-
+	free(tokens[0]);
+	tokens[0] = all_path;
+	child_creator(tokens, env);
+	free_token(tokens, counter);
+}
 
 /**
- ***Tok - tokenize something
- *@com: points to the command recived
- *delm: points to the delimiter
- *Return: The Tokens pointer
+ * child_creator - Create a child process and execute the command
+ * @tokens: The tokenized command and arguments
+ * @env: The environment variables
  */
-char **Tok(char **tokI, char *com)
+void child_creator(char **tokens, char **env)
 {
-	/*Declarations*/
-	char *token = NULL;
-	int T_count = 0;
-	/*verify allocation*/
-	if (tokI == NULL)
+	pid_t pid = fork(); /* Create a child process */
+	int status;
+
+	if (pid == -1)
 	{
-		perror("malloc fail");
-		exit(EXIT_FAILURE);
-	} /*verify malloc*/
-	/*
-	 * " ": Space character
-	 *"\t": Tab character
-	 *"\r": Carriage return character
-	 *"\n": Newline character
-	 *"\a": Bell character (audible alert)
-	 *":" : Chech for colons
-	 */
-	token = strtok(com, "\t\r\n\a:");
-	while (token != NULL)
-	{
-		tokI[T_count] = token;
-		T_count++;
-		token = strtok(NULL, "\t\r\n\a:");
+		perror("fork"); /* Print error message if fork fails */
+		return;
 	}
-	tokI[T_count] = NULL;
-	return (tokI);
-} /*end function*/
+	if (pid == 0)
+	{
+		execve(tokens[0], tokens, env); /* Execute the command using execve */
+		perror("error ");				/* Print an error message if execve fails */
+		exit(EXIT_FAILURE);				/* Exit child process with failure status */
+	}
+	else
+	{
+		/* Wait specifically for the child process to complete */
+		waitpid(pid, &status, 0);
+	}
+}
 
 
