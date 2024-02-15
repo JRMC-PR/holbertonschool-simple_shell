@@ -12,7 +12,7 @@ Releade date August 25, 2023
 4. Authors
   -Jesus R. Mendez Cruz
   -Kelvin A. Santana Collazo
-    
+
 ## 📜 Introduction
 - What is Shell?
 The name "shell" for a command-line interpreter and the concept of making the shell a user program
@@ -65,9 +65,9 @@ You don’t have to:
    Allowed editors:
    ![Vim](https://img.shields.io/badge/VIM-%2311AB00.svg?style=for-the-badge&logo=vim&logoColor=white)
    ![Emacs](https://img.shields.io/badge/Emacs-%237F5AB6.svg?&style=for-the-badge&logo=gnu-emacs&logoColor=white)
-   
+
    All our files were compiled on Ubuntu 20.04 LTS using `gcc`, using the options `-g -Wall -Werror -Wextra -pedantic -std=gnu89`
-   
+
    Language: ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
 
 ### ✅ Allowed functions & system calls & used
@@ -116,24 +116,30 @@ You don’t have to:
 ## 🗃️ Documentation
 
 ### 🕹️ Usage
+  First complie the shell program using the following command:
+  ```gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh```
+  Then run the shell program using the following command:
+  ```./hsh```
 
+  ![Output Example](./simple_shell.png)
   Interactive
-  
+
   An interactive shell is defined as the shell that simply takes commands as input from the user and
   acknowledges the output to the user. This shell also reads startup files that occurred during activation
  and display a prompt.
 
   Non-Interactive
-  
+
   As the name inplies, a non-interactive shell is a type of shell that doesn't interact with the user. We can
  run it through a script. Also, it can be run through some automated process. The non-interactive shell influence
 the PATH variables. It is higly recommended to use the full path for a command in non-interactive shells. Non-interactive
 scripts can smoothly run in the background easily.
 
   Built-In
-  
+
   A built-in is a command or function that is part of the shell itself. The command is "built-in" to the shell program
  - no external program is necessary to run the command, and a new process does not need to be created.
 
 ## 🖋️ Developers
-### Jesus R. Mendez, Kelvin A. Santana
+ Hey there! Im `Jesus R. Mendez Cruz` you can find me over at:  [GitHub](https://github.com/JRMC-PR) / [linkedin](https://www.linkedin.com/in/jes%C3%BAs-m%C3%A9ndez-068b8a27a/). Im a recenly graduated software engineer from Holberton School. I have a passion for learning and teaching others. I love to code and I am always looking for new challenges and opportunities to grow as a professional.
+### Kelvin A. Santana
